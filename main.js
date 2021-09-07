@@ -1,14 +1,26 @@
 window.addEventListener("load",function(){
+
+    let ans = 1;
+
     const output_div = document.querySelector(".output");
     const buttons_div = document.querySelector(".buttons");
     const layouts_btns_div = document.querySelector(".layouts");
 
-    const on_layout_input = (input_index)=>{
-        let layout_bind = layouts[current_layout][input_index];
+    const add_bind = (layout_bind)=>{
         add_input_text(layout_bind.output,input_pointer);
         input_array.splice(input_pointer+1,0,layout_bind.value);
         input_pointer++;
         scroll_down();
+    };
+
+    const on_layout_input = (input_index)=>{
+        if(input_index >= layouts[current_layout].length) return;
+        let layout_bind = layouts[current_layout][input_index];
+        if(layout_bind.type == "FUNCINFO"){
+            layout_bind.func();
+            return;
+        }
+        add_bind(layout_bind);
     };
 
 
@@ -26,13 +38,23 @@ window.addEventListener("load",function(){
         });
     }
 
+    const delete_selected = ()=>{
+        if(input_array.length == 0) return;
+        current_input_div.children[input_pointer].remove();
+        input_array.splice(input_pointer,1);
+        if(current_input_div.children.length == 0) return;
+        input_pointer = (input_pointer == 0) ? 0 : input_pointer-1;
+        current_input_div.children[input_pointer].classList.add("selected");
+    };
+
     let current_layout = 0;
     const BTNINFO = new_struct("BTNINFO",["name","string"],["output","string"],["value","any"]);
+    const FUNCINFO = new_struct("FUNCINFO", ["name","string"], ["func", "function"]);
     const layouts = [
         [
             BTNINFO("7","7",7),
             BTNINFO("8","8",8),
-            BTNINFO("9","8",9),
+            BTNINFO("9","9",9),
             BTNINFO("4","4",4),
             BTNINFO("5","5",5),
             BTNINFO("6","6",6),
@@ -62,39 +84,53 @@ window.addEventListener("load",function(){
             BTNINFO("atan","atan(","atan"),
             BTNINFO("ln","ln(","ln"),
             BTNINFO("log","log(","log"),
+            BTNINFO("!","!(","!"),
+
+        ],
+        [
             BTNINFO("e","e",Math.E),
-            BTNINFO("π","π",Math.PI)
+            BTNINFO("π","π",Math.PI),
+            BTNINFO("Φ","Φ",1.6180339),
+            BTNINFO("rad","rad(","rad"),
+            BTNINFO("deg","deg(","deg")
+        ],
+        [
+            FUNCINFO("C",function(){
+                output_div.innerHTML = "";
+                create_new_input();
+            }),
+            BTNINFO("ANS","ANS","ANS"),
+            FUNCINFO("DEL",delete_selected),
         ],
     ];
 
     const key_layout_bindings = {
         "z":0,
         "x":1,
-        "c":2
+        "c":2,
+        "v":3,
+        "b":4
     };
 
     const set_layout = (i)=>{
         layouts_btns_div.querySelector(".btn-selected").classList.remove("btn-selected");
         layouts_btns_div.children[i].classList.add("btn-selected");
         current_layout = i;
+        const curr_lay_len = layouts[current_layout].length;
         let buttons = buttons_div.querySelectorAll("div");
-        for(let i = 0; i < buttons.length-1; i++){
-            buttons[i].querySelector("p").innerHTML = layouts[current_layout][i].name;
+        for(let j = 0; j < buttons.length-1; j++){
+            if(j >= curr_lay_len){
+                buttons[j].querySelector("p").innerHTML = "";
+                buttons[j].classList.remove("click-btn");
+                continue;
+            }
+            buttons[j].querySelector("p").innerHTML = layouts[current_layout][j].name;
+            buttons[j].classList.add("click-btn");
         }
     };
     set_layout(0);
 
     const key_bindings = {
-        "0":9,
-        "3":8,
-        "2":7,
-        "1":6,
-        "6":5,
-        "5":4,
-        "4":3,
-        "9":2,
-        "8":1,
-        "7":0,
         "Home":0,
         "ArrowUp":1,
         "PageUp":2,
@@ -115,6 +151,28 @@ window.addEventListener("load",function(){
         ",":7,
         ".":8,
         "/":9
+    };
+
+    const non_layout_bindings = {
+        "7":BTNINFO("7","7",7),
+        "8":BTNINFO("8","8",8),
+        "9":BTNINFO("9","9",9),
+        "4":BTNINFO("4","4",4),
+        "5":BTNINFO("5","5",5),
+        "6":BTNINFO("6","6",6),
+        "1":BTNINFO("1","1",1),
+        "2":BTNINFO("2","2",2),
+        "3":BTNINFO("3","3",3),
+        "0":BTNINFO("0","0",0),
+        "(":BTNINFO("(","(","("),
+        ")":BTNINFO(")",")",")"),
+        "+":BTNINFO("+","+","+"),
+        "-":BTNINFO("-","-","-"),
+        "*":BTNINFO("*","*","*"),
+        // "/":BTNINFO("/","/","/"),
+        "%":BTNINFO("%","%","%"),
+        "^":BTNINFO("^","^","^"),
+        // ".":BTNINFO(".",".",".")
     };
 
     let current_input_div = null;
@@ -158,14 +216,6 @@ window.addEventListener("load",function(){
         current_input_div.children[input_pointer].classList.add("selected");
     };
 
-    const delete_selected = ()=>{
-        current_input_div.children[input_pointer].remove();
-        input_array.splice(input_pointer,1);
-        if(current_input_div.children.length == 0) return;
-        input_pointer = (input_pointer == 0) ? 0 : input_pointer-1;
-        current_input_div.children[input_pointer].classList.add("selected");
-    };
-
     const combine_nums = ()=>{
         let result = [];
         let num = "";
@@ -182,19 +232,34 @@ window.addEventListener("load",function(){
             }
         };
 
+        const after_paran_mult = (i)=>{
+            if(input_array[i-1] == ")" && last_was_op) result.push("*");
+        };
+
         for(let i = 0; i < input_array.length; i++){
+
+            if(input_array[i] == "ANS"){
+                after_paran_mult(i);
+                result.push(ans);
+                last_was_op = false;
+                continue;
+            }
+
             if(typeof input_array[i] == "number"){
+                after_paran_mult(i);
                 num += String(input_array[i]);
                 last_was_op = false;
                 continue;
             }
             if(input_array[i] == "."){
+                after_paran_mult(i);
                 num += ".";
                 last_was_op = false;
                 continue;
             }
 
             if(input_array[i] == "-" && last_was_op){
+                after_paran_mult(i);
                 num += "-";
                 last_was_op = true;
                 continue;
@@ -225,8 +290,8 @@ window.addEventListener("load",function(){
     const enter_event = ()=>{
         if(input_array.length == 0) return;
         let combined = combine_nums();
-        console.log(combined);
         let calculated = MathEval.evaluate(combined);
+        if(typeof calculated == "number" && !isNaN(calculated)) ans = calculated;
         create_new_output(String(calculated));
         create_new_input();
         scroll_down();
@@ -243,6 +308,10 @@ window.addEventListener("load",function(){
         if(e.key in key_layout_bindings){
             e.preventDefault();
             set_layout(key_layout_bindings[e.key]);
+        }
+
+        if(e.key in non_layout_bindings){
+            add_bind(non_layout_bindings[e.key]);
         }
 
         if(e.key == "a") move_selected(-1);

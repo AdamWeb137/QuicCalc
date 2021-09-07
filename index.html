@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>QuicCalc</title>
         <link rel="stylesheet" href="styling.css">
+        <link rel="stylesheet" href="sizes.css">
         <script src="structs.js"></script>
         <script src="matheval.js"></script>
         <script src="main.js"></script>
@@ -12,7 +13,7 @@
     <body>
         <div class="center">
             <div class="center"><h1>QuicCalc</h1></div>
-            <div class="calc" style="display: flex;">
+            <div class="calc">
                 <div class="output"></div>
                 <div class="buttons">
                     <div class="btn"><p>7</p></div>
@@ -25,13 +26,15 @@
                     <div class="btn"><p>2</p></div>
                     <div class="btn"><p>3</p></div>
                     <div class="btn"><p>0</p></div>
-                    <div class="enter btn"><p>Enter</p></div>
+                    <div class="enter btn click-btn"><p>Enter</p></div>
                 </div>
             </div>
             <div class="layouts">
-                <div class="btn btn-selected"><p>#</p></div>
-                <div class="btn"><p>+</p></div>
-                <div class="btn"><p>f()</p></div>
+                <div class="btn btn-selected click-btn"><p>#</p></div>
+                <div class="btn click-btn"><p>+</p></div>
+                <div class="btn click-btn"><p>f()</p></div>
+                <div class="btn click-btn"><p>π</p></div>
+                <div class="btn click-btn"><p>C</p></div>
             </div>
         </div>
     </body>

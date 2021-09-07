@@ -1,0 +1,29 @@
+@media screen and (min-width:850px) and (min-height:700px)  {
+    :root {
+        --btn-size:100px;
+        --output-size:500px;
+        --calc-display:flex;
+        --btn-font:1.5rem;
+    }
+}
+
+@media screen and (max-width:850px) and (min-width:700px) {
+    :root {
+        --btn-size:75px;
+        --output-size:375px;
+        --calc-display:flex;
+        --btn-font:1.5rem;
+    }
+}
+
+@media screen and (max-width:700px) {
+    :root {
+        --btn-size:50px;
+        --output-size:250px;
+        --calc-display:block;
+        --btn-font:0.5rem;
+    }
+    .output {
+        margin: 0 auto;
+    }
+}

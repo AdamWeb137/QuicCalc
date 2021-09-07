@@ -27,7 +27,17 @@ class MathEval {
         "sqrt": a => Math.sqrt(a),
         "pow2": a => a**2,
         "ln": a => Math.log(a),
-        "log":a => Math.log10(a)
+        "log":a => Math.log10(a),
+        "!":a => {
+            a = Math.floor(a);
+            let res = 1;
+            for(let i = 1; i < a+1; i++){
+                res *= i;
+            }
+            return res;
+        },
+        "deg":a=>a/Math.PI*180,
+        "rad":a=>a*Math.PI/180
     };
 
     static handle_error(msg){

@@ -6,6 +6,10 @@
     --theme-grey:rgb(29, 87, 97);
     --theme-white:rgb(219, 250, 255);
     --selected:rgb(161, 0, 0);
+    --btn-size:100px;
+    --output-size:500px;
+    --calc-display:flex;
+    --btn-font:1.5rem;
 }
 
 body {
@@ -24,9 +28,13 @@ body {
     margin: 10px auto;
 }
 
+.calc {
+    display: var(--calc-display);
+}
+
 .output {
-    width:500px;
-    height: 500px;
+    width:var(--output-size);
+    height: var(--output-size);
     background-color: var(--theme-white);
     overflow-y: auto;
     border-radius: 25px;
@@ -66,8 +74,8 @@ body {
 }
 
 .btn {
-    width: 100px;
-    height: 100px;
+    width: var(--btn-size);
+    height: var(--btn-size);
     font-size: 2rem;
     display: flex;
     align-items: center;
@@ -80,11 +88,11 @@ body {
 }
 
 .buttons > div.enter {
-    width: 200px;
+    width: calc(var(--btn-size) * 2);
     margin:10px;
 }
 
-.btn:hover {
+.click-btn:hover {
     cursor: pointer;
 }
 
