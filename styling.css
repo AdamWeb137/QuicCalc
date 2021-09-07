@@ -1,0 +1,105 @@
+:root {
+    --back: rgb(0, 9, 26);
+    --sec-back:rgb(3, 38, 54);
+    --sec-theme-white:rgb(191, 233, 240);
+    --text:rgb(43, 223, 223);
+    --theme-grey:rgb(29, 87, 97);
+    --theme-white:rgb(219, 250, 255);
+    --selected:rgb(161, 0, 0);
+}
+
+body {
+    background-color: var(--back);
+    color:var(--theme-white);
+}
+
+@-moz-document url-prefix(){
+    .center {
+        width: -moz-fit-content;
+    }
+}
+
+.center {
+    width:fit-content;
+    margin: 10px auto;
+}
+
+.output {
+    width:500px;
+    height: 500px;
+    background-color: var(--theme-white);
+    overflow-y: auto;
+    border-radius: 25px;
+    color:var(--back);
+    font-size: 1.5rem;
+    border: 15px solid var(--sec-back);
+}
+
+.output > div {
+    padding:10px;
+    width: auto;
+}
+
+.output > div > p.selected {
+    color:var(--theme-white);
+    background-color: var(--sec-back);
+}
+
+.output > div > p {
+    margin: 2px 0px;
+}
+
+.output > div:nth-child(odd){
+    background-color: var(--theme-white);
+}
+
+.output > div:nth-child(even){
+    background-color: var(--sec-theme-white);
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    width:330px;
+    flex-wrap: wrap;
+    margin:10px;
+}
+
+.btn {
+    width: 100px;
+    height: 100px;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin:5px;
+    background-color: var(--sec-back);
+    color:var(--theme-white);
+    border-radius: 25px;
+    user-select: none;
+}
+
+.buttons > div.enter {
+    width: 200px;
+    margin:10px;
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+
+.input {
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+}
+
+.layouts {
+    display: flex;
+    justify-content: center;
+    margin:10px;
+}
+
+.btn-selected {
+    background-color: var(--selected);
+}
